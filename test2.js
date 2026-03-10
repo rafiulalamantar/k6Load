@@ -1,6 +1,6 @@
 
 import http from "k6/http"
-import { sleep } from "k6";
+import { check, sleep } from "k6";
 
 export const options = {
 
@@ -12,14 +12,21 @@ export const options = {
 
     thresholds: {
         http_req_duration: ['p(95)<500'], // 95% of requests should be below 500ms
-        http_req_failed: ['rate<0.01'] // less than 1% of requests should fail
-
+        http_req_failed: ['rate<0.01'], // less than 1% of requests should fail
+        'checks': ['rate>0.9']    // 90% of checks should pass
 
     }
 }
 
 export default function () {
-    http.get("https://quickpizza.grafana.com");
+    const res = http.get("https://quickpizza.grafana.com");
+    check(res, {
+        'is status 200': (r) => r.status === 200,
+        'page contains pizza': (r) => {
+
+            r.body.includes("pizza")
+        }
+    });
     sleep(1)
 }
 

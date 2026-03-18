@@ -13,7 +13,8 @@ export const options = {
     thresholds: {
         http_req_duration: ['p(95)<500'], // 95% of requests should be below 500ms
         http_req_failed: ['rate<0.01'], // less than 1% of requests should fail
-        'checks': ['rate>0.9']    // 90% of checks should pass
+        'checks': ['rate>0.9'],    // 90% of checks should pass
+        'http_req_duration{name: pizza-api}': ['p(95)<500']
 
     }
 }
@@ -26,6 +27,9 @@ export default function () {
 
             r.body.includes("pizza")
         }
+    });
+    http.get("https://quickpizza.grafana.com/api/pizza",{
+        tags: { name: "pizza-api" }
     });
     sleep(1)
 }

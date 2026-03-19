@@ -21,7 +21,7 @@ export const options = {
         { duration: '3s', target: 0 }, // Ramp down to 0 VUs over 3 seconds
     ],
     thresholds: {
-        http_req_duration: ['p(95)<350'], // 95% of requests should be below 500ms
+        http_req_duration: ['p(95)<500'], // 95% of requests should be below 500ms
         'checks': ['rate>0.9'],    // 90% of checks should pass
         'iteration_duration': ['p(95)<8000'] // 95% of iterations should be below 500ms
     }
@@ -32,10 +32,13 @@ export default function () {
     let userRegistered = false;
     let userAuthenticated = false;
     let authToken = '';
+    let orderCreated = false;
+    let orderId
 
     let USERNAME = `Antar${generateRandomString(5)}1`;
 
     group('User Registration', function () {
+        console.log('\n========== USER REGISTRATION ==========');
 
         const registerPayLoad = {
             username: USERNAME,
@@ -48,23 +51,25 @@ export default function () {
             }
         };
 
-        // ✅ Correct template string
         const response = http.post(`${BASE_URL}/api/users`, JSON.stringify(registerPayLoad), params);
 
-        console.log(response.body);
+        console.log('Response:', response.body);
 
         userRegistered = check(response, {
             'is status 201': (r) => r.status === 201
         });
 
         if (!userRegistered) {
-            console.error(`User registration failed. ${response.status}-${response.body}`);
+            console.error(`✗ Registration failed: ${response.status} - ${response.body}`);
+        } else {
+            console.log('✓ Registration successful');
         }
 
         sleep(1);
     });
 
     group('User Login', function () {
+        console.log('\n========== USER LOGIN ==========');
 
         const loginPayLoad = {
             username: USERNAME,
@@ -79,7 +84,7 @@ export default function () {
 
         const response = http.post(`${BASE_URL}/api/users/token/login`, JSON.stringify(loginPayLoad), params);
 
-        console.log(response.body);
+        console.log('Response:', response.body);
 
         userAuthenticated = check(response, {
             'is status 200': (r) => r.status === 200,
@@ -88,12 +93,52 @@ export default function () {
         });
 
         if (userAuthenticated) {
-            authToken = response.json('token');   // ✅ FIXED (declared earlier)
-            console.log(`User authenticated successfully. Token: ${authToken}`);
+            authToken = response.json('token');
+            console.log('✓ Login successful');
+            console.log(`Token: ${authToken}`);
         } else {
-            console.error(`User authentication failed. ${response.status}-${response.body}`);
+            console.error(`✗ Login failed: ${response.status} - ${response.body}`);
         }
 
         sleep(1);
+    });
+
+    group('Order Management', function () {
+        console.log('\n========== ORDER MANAGEMENT ==========');
+
+        const params = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${authToken}`
+            }
+        };
+
+        const orderPayLoad = {
+            maxCaloriesPerSlice: 1000,
+            mustBeVegetarian: true,
+            excludedIngredients: ["Pizza curtur"],
+            maxNumberOfToppings: 9,
+            minNumberOfToppings: 2,
+            customName: "John Doe"
+        };
+
+        const createOrderResponse = http.post(`${BASE_URL}/api/pizza`, JSON.stringify(orderPayLoad), params);
+
+        orderCreated = check(createOrderResponse, {
+            'Status is 200': (r) => r.status === 200,
+            'Response has pizza ID': (r) => r.json('pizza.id') !== undefined,
+            'Pizza name matches request': (r) => r.json('pizza.name') === orderPayLoad.customName
+        });
+
+        if (orderCreated) {
+            orderId = createOrderResponse.json('pizza.id');
+            console.log('✓ Order created successfully');
+            console.log(`Order ID: ${orderId}`);
+        } else {
+            console.error(`✗ Order failed: ${createOrderResponse.status} - ${createOrderResponse.body}`);
+        }
+
+        sleep(1);
+
     });
 }

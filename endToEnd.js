@@ -15,8 +15,16 @@ function generateRandomString(length) {
 }
 
 export const options = {
-    vus: 1,
-    duration: '3s',
+    stages: [
+        { duration: '5s', target: 2 }, // Ramp up to 2 VUs over 5 seconds
+        { duration: '5s', target: 4 }, // Stay at 4 VUs for 5 seconds
+        { duration: '3s', target: 0 }, // Ramp down to 0 VUs over 3 seconds
+    ],
+    thresholds: {
+        http_req_duration: ['p(95)<350'], // 95% of requests should be below 500ms
+        'checks': ['rate>0.9'],    // 90% of checks should pass
+        'iteration_duration': ['p(95)<8000'] // 95% of iterations should be below 500ms
+    }
 };
 
 export default function () {

@@ -25,8 +25,7 @@ export default function () {
     let userAuthenticated = false;
     let authToken = '';
 
-    // ✅ Correct dynamic username
-    let USERNAME = `Antar(${generateRandomString(5)})`;
+    let USERNAME = `Antar${generateRandomString(5)}1`;
 
     group('User Registration', function () {
 

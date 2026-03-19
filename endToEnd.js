@@ -37,6 +37,13 @@ export default function () {
 
     let USERNAME = `Antar${generateRandomString(5)}1`;
 
+    // Global counters and lists
+    if (!globalThis.registeredUsers) {
+        globalThis.registeredUsers = [];
+        globalThis.authenticatedUsers = [];
+        globalThis.orderIds = [];
+    }
+
     group('User Registration', function () {
         console.log('\n========== USER REGISTRATION ==========');
 
@@ -140,5 +147,35 @@ export default function () {
 
         sleep(1);
 
+    });
+
+    // Retrieve Order Details
+    group('Retrieve Order', function () {
+        console.log('\n========== RETRIEVE ORDER ==========');
+
+        if (orderId) {
+            const params = {
+                headers: {
+                    'Authorization': `Token ${authToken}`
+                }
+            };
+
+            const retrieveResponse = http.get(`${BASE_URL}/api/pizza/${orderId}`, params);
+
+            const orderRetrieved = check(retrieveResponse, {
+                'Retrieve status is 200': (r) => r.status === 200,
+                'Pizza ID matches': (r) => r.json('id') === orderId,
+            });
+
+            if (orderRetrieved) {
+                console.log('✓ Order retrieved successfully');
+            } else {
+                console.error(`✗ Order retrieval failed: ${retrieveResponse.status} - ${retrieveResponse.body}`);
+            }
+        } else {
+            console.log('⚠ No order ID available to retrieve');
+        }
+
+        sleep(1);
     });
 }

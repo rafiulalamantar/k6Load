@@ -1,0 +1,367 @@
+{
+  "info": {
+    "_postman_id": "e855fee2-1018-4c36-a226-0c7de2132032",
+    "name": "CMR",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15901394",
+    "_collection_link": "https://go.postman.co/collection/15901394-e855fee2-1018-4c36-a226-0c7de2132032?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData =pm.response.json();",
+              "",
+              "jsonData.data.forEach(function(item)",
+              "",
+              "{",
+              "if (item.category == \"Javascript\")",
+              "{",
+              "    pm.environment.set(\"course\", item.course);",
+              "}",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"Username\" : \"rahulshett\",\n    \"password\" : \"1234567\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://quickpizza.grafana.com/api/users",
+          "protocol": "http",
+          "host": [
+            "quickpizza",
+            "grafana",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Default",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}//getapitestingcourses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "",
+                "getapitestingcourses"
+              ]
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "{\n    \"data\": [\n        {\n            \"course\": \"Postman\",\n            \"price\": 150,\n            \"category\": \"Javascript\"\n        },\n        {\n            \"course\": \"SoapUI\",\n            \"price\": 25,\n            \"category\": \"Groovy\"\n        },\n        {\n            \"course\": \"RestAssured\",\n            \"price\": 100,\n            \"category\": \"Java\"\n        },\n        {\n            \"course\": \"RestAssured\",\n            \"price\": 100,\n            \"category\": \"Java\"\n        }\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData =pm.response.json();",
+              " pm.expect(jsonData.category).to.eql(\"javascript\");",
+              " pm.expect(jsonData.students>10000).to.be.true;"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\" : \"rahulshett\",\n    \"password\" : \"1234567\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://quickpizza.grafana.com/api/users/token/login",
+          "protocol": "https",
+          "host": [
+            "quickpizza",
+            "grafana",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users",
+            "token",
+            "login"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Default",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/getcoursedetails?name=Postman",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "",
+                "getcoursedetails"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Postman"
+                }
+              ]
+            }
+          },
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": null,
+          "cookie": [],
+          "body": "{\n  \"name\" : \"postman\",\n  \"category\": \"javascript\",\n  \"content\": \"videos\",\n  \"length\" : \"15hours\",\n  \"students\": 12342\n}\n"
+        },
+        {
+          "name": "rest assured example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/getcoursedetails?name=restassured",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "getcoursedetails"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "restassured"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "html",
+          "header": [
+            {
+              "key": "Date",
+              "value": "Thu, 03 Feb 2022 22:02:57 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Server",
+              "value": "nginx"
+            },
+            {
+              "key": "x-srv-trace",
+              "value": "v=1;t=e37d48a257a4b164"
+            },
+            {
+              "key": "x-srv-span",
+              "value": "v=1;s=a1cad104d247445b"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "X-RateLimit-Limit",
+              "value": "120"
+            },
+            {
+              "key": "X-RateLimit-Remaining",
+              "value": "118"
+            },
+            {
+              "key": "X-RateLimit-Reset",
+              "value": "1643925815"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"79-rtafNKrDrBPCRQ7F7jPjj6iSBIQ\""
+            },
+            {
+              "key": "Vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "gzip"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"name\" : \"jmeter,\n  \"category\": \"javascript\",\n  \"content\": \"videos\",\n  \"length\" : \"15hours\",\n  \"students\": 12342\n}\n"
+        },
+        {
+          "name": "/getcoursedetails?name=Postman",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/getcoursedetails?name=Postman",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "getcoursedetails"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Postman"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "html",
+          "header": [
+            {
+              "key": "Date",
+              "value": "Thu, 03 Feb 2022 22:05:30 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Server",
+              "value": "nginx"
+            },
+            {
+              "key": "x-srv-trace",
+              "value": "v=1;t=e37d48a257a4b164"
+            },
+            {
+              "key": "x-srv-span",
+              "value": "v=1;s=a1cad104d247445b"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "X-RateLimit-Limit",
+              "value": "120"
+            },
+            {
+              "key": "X-RateLimit-Remaining",
+              "value": "118"
+            },
+            {
+              "key": "X-RateLimit-Reset",
+              "value": "1643925815"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"79-rtafNKrDrBPCRQ7F7jPjj6iSBIQ\""
+            },
+            {
+              "key": "Vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "gzip"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"name\" : \"Postman\",\n  \"category\": \"javascript\",\n  \"content\": \"videos\",\n  \"length\" : \"15hours\",\n  \"students\": 123426\n}\n"
+        }
+      ]
+    },
+    {
+      "name": "Place order",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Retrieve order",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

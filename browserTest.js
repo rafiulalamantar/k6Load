@@ -1,5 +1,6 @@
-import { type } from "wd/lib/commands";
-import browser from k6 / browser;
+import { browser } from "k6/browser";
+import http from "k6/http";
+import { check } from "k6";
 
 export const options = {
     scenarios: {
@@ -8,21 +9,26 @@ export const options = {
             exec: "browserTest",
             vus: 2,
             maxDuration: '1m',
-            iterations: 3,
+            iterations: 4,
             options: {
                 browser: {
-                    headless: true,
                     type: "chromium",
+                    headless: false,
                 }
 
-            },
-            backend: {
-                exec: "backendTest",
-                vus: 1,
-                duration: '1m',
-
             }
+        },
+        backendTest: {
+            executor: 'shared-iterations',
+            exec: "backendTest",
+            vus: 1,
+            iterations: 4,
+            startTime: '0s'
+
         }
+    },
+    thresholds: {
+        'checks': ['rate===1.0'],    // 90% of checks should pass
     }
 }
 
@@ -33,12 +39,12 @@ export async function browserTest() {
 
     await page.goto('');
     await page.locator("#inputUsername").type("Rafiul")
-    await page.locator("#inputPassword").type("")
+    await page.locator("input[placeholder='Password']").type("")
     await page.locator("button[type='submit']").click();
 
     await page.waitForTimeout(2000);
 
-    const pageTitle = await page.locator("h1").first().textContent();
+    const pageTitle = await page.locator("h1").textContent();
 
     check(pageTitle, {
 
@@ -47,8 +53,17 @@ export async function browserTest() {
         }
     });
 
+    await context.close();
+
 }
 
 export async function backendTest() {
+
+    const res = http.get("");
+
+    check(res, {
+        'is status 200': (r) => r.status === 200
+    });
+
 
 }

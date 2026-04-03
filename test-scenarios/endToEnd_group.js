@@ -1,9 +1,20 @@
+// Grouped End-to-End Test Scenario
+
+// Scenario Name: Structured User Journey with Metrics
+// Description: This test organizes the end-to-end user journey into logical groups (like authentication,
+// browsing, ordering) with custom metrics tracking. It provides detailed insights into which parts
+// of the user flow are most problematic under load.
+// Real-life application: Complex applications where different user actions need separate monitoring.
+
 import { check, group } from 'k6';
 import http from 'k6/http';
 import { sleep } from 'k6';
+import { Rate } from 'k6/metrics';
 
 const BASE_URL = 'https://quickpizza.grafana.com';
 const PASSWORD = "password123";
+
+const authenticationRate = new Rate('authentication_rate');
 
 function generateRandomString(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -23,7 +34,12 @@ export const options = {
     thresholds: {
         http_req_duration: ['p(95)<500'], // 95% of requests should be below 500ms
         'checks': ['rate>0.9'],    // 90% of checks should pass
-        'iteration_duration': ['p(95)<8000'] // 95% of iterations should be below 500ms
+        'iteration_duration': ['p(95)<8000'], // 95% of iterations should be below 500ms
+        'group_duration{group:::User Registration}': ['p(95)<2000'], // 95% of User Registration groups should be below 2000ms
+        'group_duration{group:::User Login}': ['p(95)<2000'], // 95% of User Login groups should be below 2000ms
+        'group_duration{group:::Order Management}': ['p(95)<3000'], // 95% of Order Management groups should be below 3000ms
+        'group_duration{group:::Retrieve Order}': ['p(95)<2000'], // 95% of Retrieve Order groups should be below 2000ms
+        'authentication_rate': ['rate>0.9'], // 90% of authentication attempts should succeeds
     }
 };
 
@@ -100,11 +116,15 @@ export default function () {
         });
 
         if (userAuthenticated) {
+            authenticationRate.add(1);
             authToken = response.json('token');
             console.log('✓ Login successful');
             console.log(`Token: ${authToken}`);
+            console.log(`Authentication Rate: ${(authenticationRate.rate * 100).toFixed(1)}%`);
         } else {
+            authenticationRate.add(0);
             console.error(`✗ Login failed: ${response.status} - ${response.body}`);
+            console.log(`Authentication Rate: ${(authenticationRate.rate * 100).toFixed(1)}%`);
         }
 
         sleep(1);

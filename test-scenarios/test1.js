@@ -1,4 +1,12 @@
 
+// Basic Load Test Scenario
+
+// Scenario Name: Simple API Load Test
+// Description: This is a basic load test that sends a constant number of virtual users to a single
+// API endpoint for a short duration. It establishes baseline performance metrics and ensures the
+// application can handle moderate, steady traffic without issues.
+// Real-life application: Monitoring basic API health or testing small-scale applications.
+
 import http from "k6/http"
 import { sleep } from "k6";
 

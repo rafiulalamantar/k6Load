@@ -1,4 +1,12 @@
 
+// Ramping Load Test Scenario
+
+// Scenario Name: Gradual Load Increase Test
+// Description: This test gradually increases the number of virtual users over time, simulating
+// organic traffic growth. It helps identify at what point the application starts to degrade
+// in performance and establishes performance characteristics under varying loads.
+// Real-life application: Testing applications during business hours when traffic naturally increases.
+
 import http from "k6/http"
 import { check, sleep } from "k6";
 import {Trend} from "k6/metrics";

@@ -6,22 +6,84 @@ A comprehensive k6 load testing project for the QuickPizza API with multiple tes
 
 ```
 k6Load/
-├── endToend.js          # Complete end-to-end user journey testing
-├── endToEnd_group.js    # Advanced group-based testing with custom metrics
-├── test1.js            # Basic load testing (3 VUs, 10s)
-├── test2.js            # Advanced load testing with custom metrics
+├── test-scenarios/          # All k6 test scripts by scenario
+│   ├── authTokenRefreshTest.js
+│   ├── browserTest.js
+│   ├── cdnPerformanceTest.js
+│   ├── concurrentLoginTest.js
+│   ├── dataExportImportTest.js
+│   ├── databaseStressTest.js
+│   ├── endToEnd.js
+│   ├── endToEnd_group.js
+│   ├── fileUploadTest.js
+│   ├── memoryLeakTest.js
+│   ├── microservicesTest.js
+│   ├── rateLimitTest.js
+│   ├── stressTest.js
+│   ├── test1.js
+│   ├── test2.js
+│   ├── webSocketTest.js
+│   └── README.md
 ├── package.json        # Project dependencies
-└── README.md          # This documentation
+└── README.md           # This documentation
 ```
 
 ## 🚀 Test Files Overview
 
-### 1. `endToend.js` - End-to-End User Journey
+All k6 test scripts are now located in `test-scenarios/`. Key scenarios include:
+
+### 1. `test-scenarios/endToEnd.js` - End-to-End User Journey
 Complete user flow testing including:
 - User registration
 - User authentication
 - Order creation
 - Order retrieval
+
+### 2. `test-scenarios/endToEnd_group.js` - Advanced Group Testing
+Enhanced version with custom metrics and detailed reporting.
+
+### 3. `test-scenarios/stressTest.js` - Spike Load Test
+Flash-sale style sudden traffic spike simulation.
+
+### 4. `test-scenarios/rateLimitTest.js` - API Rate Limiting Under Load
+Simulates high-volume requests to rate-limited endpoints.
+
+### 5. `test-scenarios/databaseStressTest.js` - Database Connection Pool Stress
+High concurrency order posting to test DB connection limits.
+
+### 6. `test-scenarios/memoryLeakTest.js` - Memory Leak Detection
+Long duration repeated heavy responses to detect memory issues.
+
+### 7. `test-scenarios/concurrentLoginTest.js` - Mass Login Surge
+Simultaneous logins to test auth system under peak usage.
+
+### 8. `test-scenarios/fileUploadTest.js` - Upload Under Load
+Simulates concurrent file uploads.
+
+### 9. `test-scenarios/webSocketTest.js` - Realtime WebSocket Load
+Persistent WS connections and message reliability.
+
+### 10. `test-scenarios/microservicesTest.js` - Inter-Service Latency
+Simultaneous microservices calls (user + order + payment).
+
+### 11. `test-scenarios/cdnPerformanceTest.js` - CDN Static Asset Load
+Batch requests for CSS/JS/image assets.
+
+### 12. `test-scenarios/authTokenRefreshTest.js` - Token Refresh Handling
+Tests expiring session/token refresh under load.
+
+### 13. `test-scenarios/dataExportImportTest.js` - Bulk Data Ops
+Large export/import operations.
+
+### 14. `test-scenarios/test1.js` - Basic Load Test
+Small baseline load.
+
+### 15. `test-scenarios/test2.js` - Ramp Load Test
+Staged ramp-up/ramp-down scenario.
+
+### 16. `test-scenarios/browserTest.js` - Browser UI Flow
+Browser-automation page and API checks for frontend UX performance.
+
 
 **Key Features:**
 - Random username generation
